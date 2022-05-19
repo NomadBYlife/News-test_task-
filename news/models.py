@@ -26,6 +26,7 @@ class News(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        self.vendor_code = self.id
         if not self.slug:
             self.slug = slugify(str(self.title))
         return super().save(*args, **kwargs)
@@ -41,6 +42,13 @@ class News(models.Model):
         for i in self.raiting_news.filter(new_id=self.pk):
             num += int(str(i.score))
         return num
+
+
+@receiver(post_save, sender=News)
+def create_news_vendore_code(sender, instance, created, **kwargs):
+    if created:
+        instance.vendor_code = instance.id
+        instance.save()
 
 
 class Author(models.Model):

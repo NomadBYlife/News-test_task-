@@ -4,9 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django import views
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView
 
-from .forms import RegisterUserForm, LoginUserForm, RaitingForm
+from .forms import RegisterUserForm, LoginUserForm, RaitingForm, NewsForm
 from .models import News, Author, Ip, Raiting
 
 menu = [{'title': 'Главная', 'url_name': 'home'},
@@ -174,3 +174,14 @@ class FacoritesDelete(views.View):
         news.favorite = False
         news.save()
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class NewsAddView(CreateView):
+    """Создание новой новости"""
+    model = News
+    template_name = 'news/news_add.html'
+    form_class = NewsForm
+
+    def form_valid(self, form):
+        form.instance.author_id = self.request.user.id
+        return super().form_valid(form)

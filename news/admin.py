@@ -9,7 +9,7 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ('vendor_code', 'title', 'slug', 'author', 'favorite', 'total_views')
     list_display_links = ('vendor_code', 'title')
     # list_editable = ('favorite',)
-    exclude = ('slug',)
+    exclude = ('slug', 'vendor_code')
 
 
 @admin.register(Author)

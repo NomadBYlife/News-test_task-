@@ -16,7 +16,7 @@
 <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
 {% endfor %}
 {% if request.user.is_authenticated %}
-{#    <li><a href="{% url 'add_blog' %}">New blog</a></li>#}
+    <li><a href="{% url 'news_add' %}">Новая статья</a></li>
     <li><a class="disable" href="#">{{ user.username }}</a></li>
     <li><a href="{% url 'favorites' %}">Избранное</a></li>
     <li><a href="{% url 'logout' %}">Выйти</a></li>

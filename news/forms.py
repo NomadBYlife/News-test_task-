@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.forms import Textarea
 
-from news.models import RaitingScore, Raiting
+from news.models import RaitingScore, Raiting, News
 
 
 class RegisterUserForm(UserCreationForm):
@@ -31,3 +32,20 @@ class RaitingForm(forms.ModelForm):
     class Meta:
         model = Raiting
         fields = ('score',)
+
+
+class NewsForm(forms.ModelForm):
+    """Форма для добавления новой статьи"""
+    class Meta:
+        model = News
+        fields = ['title','short_description', 'description']
+        widgets = {
+            "title": Textarea(attrs={
+                'class': 'form_news',
+                'placeholder': 'Название статьи'}),
+            'short_description': Textarea(attrs={
+                'class': 'form_news',
+                'placeholder': 'Краткое содержание статьи'}),
+            'description': Textarea(attrs={
+                'class': 'form_news',
+                'placeholder': 'Полное содержание статьи'})}
