@@ -1,0 +1,72 @@
+body {background-color: grey;
+    width: 90% }
+aside {
+    float: left;
+    width: 15%;
+    height: 100vh;
+    color: #fff;
+}
+aside ul {list-style: none}
+aside a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    transition: 1s ;
+}
+aside ul li:hover,aside ul a:hover{
+    color: #eb5959;
+}
+/*.paginate li {*/
+/*    display: inline-block;*/
+/*    text-decoration: none;*/
+/*}*/
+/*.page_select{*/
+/*    text-decoration: none;*/
+/*    margin-left: 10px;*/
+/*    color: black;*/
+/*    padding: 5px 10px;*/
+/*    font-size: 15px;*/
+/*    border: 1px solid black;*/
+/*    border-radius: 50%;*/
+/*}*/
+/*.paginate a {*/
+/*    text-decoration: none;*/
+/*    margin-left: 10px;*/
+/*    color: Blue;*/
+/*    padding: 5px 10px;*/
+/*    font-size: 15px;*/
+/*    border: 1px solid blue;*/
+/*    border-radius: 50%;*/
+/*}*/
+/*.paginate a:hover {*/
+/*    border-color: black;*/
+/*}*/
+/*.middle{*/
+/*    margin-left: 10px;*/
+/*    color: Blue;*/
+
+/*}*/
+.main li {list-style-type: none;}
+.main li a ,.enter {
+    text-decoration: none;
+    color: blue;
+}
+
+
+.register_form {
+    width: 200px;
+    margin-left: 30px;
+}
+.form_label {
+    display: inline-block;
+    min-width: 120px;
+    /*vertical-align: top;*/
+}
+.errors ul,.form_errors ul {
+    list-style: none;
+    color: red;
+}
+.disable {
+    pointer-events: none;
+}
