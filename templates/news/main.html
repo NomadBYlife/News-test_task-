@@ -26,9 +26,10 @@
 </aside>
 
 {% for i in news %}
-    {{ i.title }} <br>
+    <a href="{% url 'news_detail' i.slug %}">{{ i.title }} <br></a>
     {{ i.short_description }}<br>
-    {{ i.description }}<br><br>
+    {{ i.description }}<br>
+    просмотры: {{ i.total_views }}<br><br>
 {% endfor %}
 
 

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 from slugify import slugify
 
 
@@ -14,6 +15,7 @@ class News(models.Model):
     short_description = models.TextField(max_length=250, verbose_name='краткое содержание')
     description = models.TextField(verbose_name='содержание')
     favorite = models.BooleanField(default=False, verbose_name='в избранном')
+    views = models.ManyToManyField('Ip', related_name='post_view', blank=True, verbose_name='просмотры')
 
     # my_mark
     # raiting
@@ -29,6 +31,12 @@ class News(models.Model):
         if not self.slug:
             self.slug = slugify(str(self.title))
         return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('news_detail', kwargs={'slug': self.slug})
+
+    def total_views(self):
+        return self.views.count()
 
 
 class Author(models.Model):
@@ -49,11 +57,23 @@ class Author(models.Model):
             self.slug = slugify(str(self.pseudonym))
         return super().save(*args, **kwargs)
 
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Author.objects.create(pseudonym=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.author.save()
+
+
+class Ip(models.Model):  # наша таблица где будут айпи адреса
+    ip = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.ip
+
+
+
