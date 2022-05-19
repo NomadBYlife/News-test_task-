@@ -7,5 +7,16 @@
 <body>
 {{ news.title }}<br>
 {{ news.total_views }}
+<form action="{% url 'add_score' %}" method="post" name="raiting">
+    {% csrf_token %}
+    <input type="hidden" value="{{ news.id }}" name="news">
+    {{ score_form.as_p }}
+    <button type="submit">поставить оценку</button>
+    {% if has_score == 1 %}
+        моя оценка: {{ my_score.score }}
+    <a href="{% url 'delete_score' news.slug %}">удалить оценку</a>
+    {% endif %}
+
+</form>
 </body>
 </html>

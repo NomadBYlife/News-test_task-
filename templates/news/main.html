@@ -29,7 +29,8 @@
     <a href="{% url 'news_detail' i.slug %}">{{ i.title }} <br></a>
     {{ i.short_description }}<br>
     {{ i.description }}<br>
-    просмотры: {{ i.total_views }}<br><br>
+    просмотры: {{ i.total_views }}<br>
+    рейтинг {{ i.raiting_sum }}<br><br>
 {% endfor %}
 
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import News, Ip
+from .models import News, RaitingScore, Raiting
 
 
 @admin.register(News)
@@ -11,6 +11,14 @@ class NewsAdmin(admin.ModelAdmin):
     list_editable = ('favorite',)
     exclude = ('slug',)
 
-@admin.register(Ip)
-class IpAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ip')
+
+@admin.register(RaitingScore)
+class RaitingScoreAdmin(admin.ModelAdmin):
+    """Админка оценок"""
+    list_display = ('id', 'value')
+
+
+@admin.register(Raiting)
+class RaitingAdmin(admin.ModelAdmin):
+    """Админка рейтинга"""
+    list_display = ('id', 'ip', 'score', 'new')

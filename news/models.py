@@ -17,9 +17,6 @@ class News(models.Model):
     favorite = models.BooleanField(default=False, verbose_name='в избранном')
     views = models.ManyToManyField('Ip', related_name='post_view', blank=True, verbose_name='просмотры')
 
-    # my_mark
-    # raiting
-
     class Meta:
         verbose_name = 'новость'
         verbose_name_plural = 'новости'
@@ -37,6 +34,12 @@ class News(models.Model):
 
     def total_views(self):
         return self.views.count()
+
+    def raiting_sum(self):
+        num = 0
+        for i in self.raiting_news.filter(new_id=self.pk):
+            num += int(str(i.score))
+        return num
 
 
 class Author(models.Model):
@@ -69,11 +72,36 @@ def save_user_profile(sender, instance, **kwargs):
     instance.author.save()
 
 
-class Ip(models.Model):  # наша таблица где будут айпи адреса
+class Ip(models.Model):
+    """Айпишники"""
     ip = models.CharField(max_length=100)
 
     def __str__(self):
         return self.ip
 
 
+class RaitingScore(models.Model):
+    """Значения рейтинга"""
+    value = models.SmallIntegerField(default=0, verbose_name='значение')
 
+    class Meta:
+        verbose_name = "оценка"
+        verbose_name_plural = "оценки"
+        ordering = ['-value']
+
+    def __str__(self):
+        return f"{self.value}"
+
+
+class Raiting(models.Model):
+    """Рейтинг"""
+    ip = models.CharField(max_length=15, verbose_name='IP адрес')
+    score = models.ForeignKey(RaitingScore, on_delete=models.CASCADE, verbose_name='оценка')
+    new = models.ForeignKey(News, on_delete=models.CASCADE, related_name='raiting_news', verbose_name='статья')
+
+    class Meta:
+        verbose_name = 'рейтинг'
+        verbose_name_plural = 'рейтинги'
+
+    def __str__(self):
+        return f"{self.score} - {self.new}"
