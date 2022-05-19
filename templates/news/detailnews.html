@@ -16,7 +16,12 @@
         моя оценка: {{ my_score.score }}
     <a href="{% url 'delete_score' news.slug %}">удалить оценку</a>
     {% endif %}
-
 </form>
+{% if news not in request.user.author.favorites.all %}
+<a href="{% url 'favorites_add' news.slug %}">добавить в избранное</a>
+    {% else %}
+    <p>Добавлен в избранное</p>
+    <a href="{% url 'favorites_delete' news.slug %}">Удалить из ожидаемого</a>
+{% endif %}
 </body>
 </html>

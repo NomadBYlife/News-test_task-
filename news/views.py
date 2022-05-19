@@ -1,6 +1,6 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django import views
@@ -28,6 +28,7 @@ class NewsListView(ListView):
     model = News
     template_name = 'news/main.html'
     context_object_name = 'news'
+    ordering = '-date_create'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -59,7 +60,7 @@ class NewsDetailView(views.View):
             'title': news,
             'score_form': RaitingForm(),
             'has_score': has_score,
-            'my_score' : my_score,
+            'my_score': my_score,
         }
         return render(request, 'news/detailnews.html', context)
 
@@ -121,7 +122,7 @@ class AddScoreView(views.View):
                 new_id=int(request.POST.get('news')),
                 defaults={'score_id': int(request.POST.get('score'))}
             )
-            return redirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(request.META['HTTP_REFERER'])
         else:
             return HttpResponse(status=400)
 
@@ -133,4 +134,43 @@ class DeleteScoreView(views.View):
         ip = get_client_ip(request)
         score = Raiting.objects.get(new__slug=slug, ip=ip)
         score.delete()
-        return redirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class Favorites(ListView):
+    """Список избранных"""
+    model = News
+    template_name = 'news/favorites.html'
+    context_object_name = 'news'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        author = Author.objects.get(pseudonym=self.request.user)
+        context['news'] = News.objects.filter(favorites=author)
+        return context
+
+
+class FavoritesAdd(views.View):
+    """Добавление в избранные"""
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        news = News.objects.get(slug=kwargs['slug'])
+        author = Author.objects.get(pseudonym=request.user)
+        author.favorites.add(news)
+        news.favorite = True
+        news.save()
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+class FacoritesDelete(views.View):
+    """Удаление из избранных"""
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        news = News.objects.get(slug=kwargs['slug'])
+        author = Author.objects.get(pseudonym=request.user)
+        author.favorites.remove(news)
+        news.favorite = False
+        news.save()
+        return HttpResponseRedirect(request.META['HTTP_REFERER'])

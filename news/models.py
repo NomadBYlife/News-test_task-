@@ -14,8 +14,9 @@ class News(models.Model):
     author = models.ForeignKey('Author', on_delete=models.CASCADE, verbose_name='автор блога')
     short_description = models.TextField(max_length=250, verbose_name='краткое содержание')
     description = models.TextField(verbose_name='содержание')
-    favorite = models.BooleanField(default=False, verbose_name='в избранном')
+    favorite = models.BooleanField(verbose_name='в избранном')
     views = models.ManyToManyField('Ip', related_name='post_view', blank=True, verbose_name='просмотры')
+    date_create = models.DateTimeField(auto_now=True, verbose_name='дата публикации')
 
     class Meta:
         verbose_name = 'новость'
@@ -45,12 +46,13 @@ class News(models.Model):
 class Author(models.Model):
     """Автор блога"""
     pseudonym = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, verbose_name='псевдоним')
+    favorites = models.ManyToManyField(News, blank=True, related_name='favorites', verbose_name='избранные')
     slug = models.SlugField(max_length=50, unique=True, db_index=True, verbose_name='слаг')
 
     class Meta():
         ordering = ('id',)
-        verbose_name = 'блогер'
-        verbose_name_plural = 'блогеры'
+        verbose_name = 'автор'
+        verbose_name_plural = 'авторы'
 
     def __str__(self):
         return self.pseudonym.username

@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,7 @@
 {% if request.user.is_authenticated %}
 {#    <li><a href="{% url 'add_blog' %}">New blog</a></li>#}
     <li><a class="disable" href="#">{{ user.username }}</a></li>
+    <li><a href="{% url 'favorites' %}">Избранное</a></li>
     <li><a href="{% url 'logout' %}">Выйти</a></li>
 {% else %}
 <li><a href="{% url 'register' %}">Регистрация</a></li>
@@ -24,7 +26,6 @@
 {% endif %}
 </ul>
 </aside>
-
 {% for i in news %}
     <a href="{% url 'news_detail' i.slug %}">{{ i.title }} <br></a>
     {{ i.short_description }}<br>
