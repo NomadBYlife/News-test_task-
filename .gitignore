@@ -3,6 +3,7 @@
 .DS_Store
 #news/migrations/0
 # Byte-compiled / optimized / DLL files
+news/migrations/0*.py
 __pycache__/
 *.py[cod]
 *$py.class
