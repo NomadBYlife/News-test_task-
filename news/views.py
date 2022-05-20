@@ -1,12 +1,13 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
+from django.db.models import Count, Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django import views
 from django.views.generic import ListView, CreateView
 
-from .forms import RegisterUserForm, LoginUserForm, RaitingForm, NewsForm
+from .forms import RegisterUserForm, LoginUserForm, RaitingForm, NewsForm, SearchForm
 from .models import News, Author, Ip, Raiting
 
 menu = [{'title': 'Главная', 'url_name': 'home'},
@@ -23,18 +24,35 @@ def get_client_ip(request):
     return ip
 
 
-class NewsListView(ListView):
+class NewsListView(views.View):
     """Новости на страницу"""
-    model = News
-    template_name = 'news/main.html'
-    context_object_name = 'news'
-    ordering = '-date_create'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Новостной сайт'
-        context['menu'] = menu
-        return context
+    def get(self, request, *args, **kwargs):
+        news = News.objects.all()
+        form = SearchForm()
+        context = {
+            'news': news,
+            'menu': menu,
+            'form': form,
+        }
+        return render(request, 'news/main.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = SearchForm()
+        if request.POST['new'] == '-raiting':
+            news = sorted(News.objects.all(), key=lambda n: n.raiting_sum(), reverse=True)
+        if request.POST['new'] == '+raiting':
+            news = sorted(News.objects.all(), key=lambda n: n.raiting_sum())
+        if request.POST['new'] == '-date':
+            news = News.objects.all().order_by('-date_create')
+        if request.POST['new'] == '+date':
+            news = News.objects.all().order_by('date_create')
+        context = {
+            'news': news,
+            'menu': menu,
+            'form': form,
+        }
+        return render(request, 'news/main.html', context)
 
 
 class NewsDetailView(views.View):
@@ -185,3 +203,12 @@ class NewsAddView(CreateView):
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super().form_valid(form)
+
+
+def search(request):
+    form = SearchForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, )

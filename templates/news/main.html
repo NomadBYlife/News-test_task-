@@ -34,7 +34,11 @@
     рейтинг {{ i.raiting_sum }}<br><br>
 {% endfor %}
 
-
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отсортировать</button>
+</form>
 
 </body>
 </html>

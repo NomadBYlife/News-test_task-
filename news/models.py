@@ -43,6 +43,8 @@ class News(models.Model):
             num += int(str(i.score))
         return num
 
+    raiting = property(raiting_sum)
+
 
 @receiver(post_save, sender=News)
 def create_news_vendore_code(sender, instance, created, **kwargs):
@@ -95,8 +97,8 @@ class RaitingScore(models.Model):
     value = models.SmallIntegerField(default=0, verbose_name='значение')
 
     class Meta:
-        verbose_name = "оценка"
-        verbose_name_plural = "оценки"
+        verbose_name = "возможная оценка"
+        verbose_name_plural = "возможные оценки"
         ordering = ['-value']
 
     def __str__(self):
@@ -110,8 +112,8 @@ class Raiting(models.Model):
     new = models.ForeignKey(News, on_delete=models.CASCADE, related_name='raiting_news', verbose_name='статья')
 
     class Meta:
-        verbose_name = 'рейтинг'
-        verbose_name_plural = 'рейтинги'
+        verbose_name = 'поставленная оценка'
+        verbose_name_plural = 'поставленные оценки'
 
     def __str__(self):
         return f"{self.score} - {self.new}"

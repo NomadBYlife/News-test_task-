@@ -36,9 +36,10 @@ class RaitingForm(forms.ModelForm):
 
 class NewsForm(forms.ModelForm):
     """Форма для добавления новой статьи"""
+
     class Meta:
         model = News
-        fields = ['title','short_description', 'description']
+        fields = ['title', 'short_description', 'description']
         widgets = {
             "title": Textarea(attrs={
                 'class': 'form_news',
@@ -49,3 +50,15 @@ class NewsForm(forms.ModelForm):
             'description': Textarea(attrs={
                 'class': 'form_news',
                 'placeholder': 'Полное содержание статьи'})}
+
+
+form_atributes = [('-raiting', 'рейтингу (от большего к меньшему)'),
+                  ('+raiting', 'рейтингу (от меньшого к большому)'),
+                  ('-date', 'дате (сначала новые)'),
+                  ('+date', 'дате (сначала старые)')]
+
+
+class SearchForm(forms.Form):
+    """Форма для сортировки"""
+    new = forms.TypedMultipleChoiceField(label="Сортировать по:", choices=form_atributes,
+                                         widget=forms.widgets.RadioSelect)
