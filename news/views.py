@@ -1,5 +1,6 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
 from django.db.models import Count, Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -7,7 +8,7 @@ from django.urls import reverse_lazy
 from django import views
 from django.views.generic import ListView, CreateView
 
-from .forms import RegisterUserForm, LoginUserForm, RaitingForm, NewsForm, SearchForm
+from .forms import RegisterUserForm, LoginUserForm, RaitingForm, NewsForm, SearchForm, PaginatorForm
 from .models import News, Author, Ip, Raiting
 
 menu = [{'title': 'Главная', 'url_name': 'home'},
@@ -29,16 +30,25 @@ class NewsListView(views.View):
 
     def get(self, request, *args, **kwargs):
         news = News.objects.all()
+        paginator = Paginator(news, 2)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         form = SearchForm()
+        pag_form = PaginatorForm()
         context = {
             'news': news,
             'menu': menu,
             'form': form,
+            'page_obj': page_obj,
+            'pag_form': pag_form,
         }
         return render(request, 'news/main.html', context)
 
     def post(self, request, *args, **kwargs):
         form = SearchForm()
+        page_size = 2
+        news = News.objects.all()
+        # if request.POST['new']:
         if request.POST['new'] == '-raiting':
             news = sorted(News.objects.all(), key=lambda n: n.raiting_sum(), reverse=True)
         if request.POST['new'] == '+raiting':
@@ -47,10 +57,23 @@ class NewsListView(views.View):
             news = News.objects.all().order_by('-date_create')
         if request.POST['new'] == '+date':
             news = News.objects.all().order_by('date_create')
+        # if request.POST['pag']:
+        #     if request.POST['pag'] == '4':
+        #         page_size = 4
+        #         print('pag_size')
+        # if request.POST['pag'] == '4':
+        #     page_size = 4
+        # if request.POST['pag'] == '4':
+        #     page_size = 8
+        pag_form = PaginatorForm()
+        paginator = Paginator(news, page_size)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         context = {
-            'news': news,
+            'page_obj': page_obj,
             'menu': menu,
             'form': form,
+            'pag_form': pag_form,
         }
         return render(request, 'news/main.html', context)
 

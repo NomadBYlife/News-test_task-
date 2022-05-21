@@ -43,8 +43,6 @@ class News(models.Model):
             num += int(str(i.score))
         return num
 
-    raiting = property(raiting_sum)
-
 
 @receiver(post_save, sender=News)
 def create_news_vendore_code(sender, instance, created, **kwargs):

@@ -52,13 +52,23 @@ class NewsForm(forms.ModelForm):
                 'placeholder': 'Полное содержание статьи'})}
 
 
-form_atributes = [('-raiting', 'рейтингу (от большего к меньшему)'),
-                  ('+raiting', 'рейтингу (от меньшого к большому)'),
-                  ('-date', 'дате (сначала новые)'),
-                  ('+date', 'дате (сначала старые)')]
+form_attributes = [('-raiting', 'рейтингу (от большего к меньшему)'),
+                   ('+raiting', 'рейтингу (от меньшого к большому)'),
+                   ('-date', 'дате (сначала новые)'),
+                   ('+date', 'дате (сначала старые)'), ]
+
+pag_form_attributes = [('2', 2),
+                       ('4', 4),
+                       ('8', 8), ]
 
 
 class SearchForm(forms.Form):
     """Форма для сортировки"""
-    new = forms.TypedMultipleChoiceField(label="Сортировать по:", choices=form_atributes,
+    new = forms.TypedMultipleChoiceField(label="Сортировать по:", choices=form_attributes,
+                                         widget=forms.widgets.RadioSelect)
+
+
+class PaginatorForm(forms.Form):
+    """Форма для кол-ва новостей на странице"""
+    pag = forms.TypedMultipleChoiceField(label="Кол-во новостей на странице:", choices=pag_form_attributes,
                                          widget=forms.widgets.RadioSelect)
