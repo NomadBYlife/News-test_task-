@@ -1,28 +1,15 @@
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
-from django.db.models import Count, Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django import views
 from django.views.generic import ListView, CreateView
 
-from .forms import RegisterUserForm, LoginUserForm, RaitingForm, NewsForm, SearchForm, PaginatorForm
-from .models import News, Author, Ip, Raiting
-
-menu = [{'title': 'Главная', 'url_name': 'home'},
-        {'title': 'Все авторы', 'url_name': 'all_author'}]
-
-
-def get_client_ip(request):
-    """Получаем айпи клиента"""
-    ip = request.META.get('HTTP_X_FORWARDED_FOR')
-    if ip:
-        ip = ip.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+from .forms import RegisterUserForm, LoginUserForm, RatingForm, NewsForm, SearchForm, PaginatorForm
+from .models import News, Author, Ip, Rating
+from .utils import menu, get_client_ip
 
 
 class NewsListView(views.View):
@@ -48,23 +35,14 @@ class NewsListView(views.View):
         form = SearchForm()
         page_size = 2
         news = News.objects.all()
-        # if request.POST['new']:
-        if request.POST['new'] == '-raiting':
-            news = sorted(News.objects.all(), key=lambda n: n.raiting_sum(), reverse=True)
-        if request.POST['new'] == '+raiting':
-            news = sorted(News.objects.all(), key=lambda n: n.raiting_sum())
+        if request.POST['new'] == '-rating':
+            news = sorted(News.objects.all(), key=lambda n: n.rating_sum(), reverse=True)
+        if request.POST['new'] == '+rating':
+            news = sorted(News.objects.all(), key=lambda n: n.rating_sum())
         if request.POST['new'] == '-date':
             news = News.objects.all().order_by('-date_create')
         if request.POST['new'] == '+date':
             news = News.objects.all().order_by('date_create')
-        # if request.POST['pag']:
-        #     if request.POST['pag'] == '4':
-        #         page_size = 4
-        #         print('pag_size')
-        # if request.POST['pag'] == '4':
-        #     page_size = 4
-        # if request.POST['pag'] == '4':
-        #     page_size = 8
         pag_form = PaginatorForm()
         paginator = Paginator(news, page_size)
         page_number = request.GET.get('page')
@@ -89,7 +67,7 @@ class NewsDetailView(views.View):
         else:
             Ip.objects.create(ip=ip)
             news.views.add(Ip.objects.get(ip=ip))
-        my_score = Raiting.objects.filter(new__slug=kwargs['slug'], ip=ip)
+        my_score = Rating.objects.filter(new__slug=kwargs['slug'], ip=ip)
         if my_score.exists():
             has_score = 1
             my_score = my_score.first()
@@ -99,7 +77,7 @@ class NewsDetailView(views.View):
             'news': news,
             'menu': menu,
             'title': news,
-            'score_form': RaitingForm(),
+            'score_form': RatingForm(),
             'has_score': has_score,
             'my_score': my_score,
         }
@@ -156,9 +134,9 @@ class AddScoreView(views.View):
     """Добавляем оценку к статье"""
 
     def post(self, request):
-        form = RaitingForm(request.POST)
+        form = RatingForm(request.POST)
         if form.is_valid():
-            Raiting.objects.update_or_create(
+            Rating.objects.update_or_create(
                 ip=get_client_ip(request),
                 new_id=int(request.POST.get('news')),
                 defaults={'score_id': int(request.POST.get('score'))}
@@ -173,7 +151,7 @@ class DeleteScoreView(views.View):
 
     def get(self, request, slug):
         ip = get_client_ip(request)
-        score = Raiting.objects.get(new__slug=slug, ip=ip)
+        score = Rating.objects.get(new__slug=slug, ip=ip)
         score.delete()
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
@@ -227,11 +205,3 @@ class NewsAddView(CreateView):
         form.instance.author_id = self.request.user.id
         return super().form_valid(form)
 
-
-def search(request):
-    form = SearchForm()
-
-    context = {
-        'form': form,
-    }
-    return render(request, )

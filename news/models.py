@@ -1,20 +1,19 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 from django.urls import reverse
 from slugify import slugify
 
 
 class News(models.Model):
     """Новости"""
-    vendor_code = models.IntegerField(verbose_name='артикул')
+    vendor_code = models.IntegerField(blank=True, null=True, verbose_name='артикул')
     title = models.CharField(max_length=255, verbose_name='заголовок')
     slug = models.SlugField(unique=True, db_index=True, verbose_name='слаг')
-    author = models.ForeignKey('Author', on_delete=models.CASCADE, verbose_name='автор блога')
+    author = models.ForeignKey('Author', on_delete=models.CASCADE, blank=True, verbose_name='автор блога')
     short_description = models.TextField(max_length=250, verbose_name='краткое содержание')
     description = models.TextField(verbose_name='содержание')
-    favorite = models.BooleanField(verbose_name='в избранном')
+    favorite = models.BooleanField(default=False, verbose_name='в избранном')
     views = models.ManyToManyField('Ip', related_name='post_view', blank=True, verbose_name='просмотры')
     date_create = models.DateTimeField(auto_now=True, verbose_name='дата публикации')
 
@@ -37,18 +36,11 @@ class News(models.Model):
     def total_views(self):
         return self.views.count()
 
-    def raiting_sum(self):
+    def rating_sum(self):
         num = 0
-        for i in self.raiting_news.filter(new_id=self.pk):
+        for i in self.rating_news.filter(new_id=self.pk):
             num += int(str(i.score))
         return num
-
-
-@receiver(post_save, sender=News)
-def create_news_vendore_code(sender, instance, created, **kwargs):
-    if created:
-        instance.vendor_code = instance.id
-        instance.save()
 
 
 class Author(models.Model):
@@ -71,26 +63,15 @@ class Author(models.Model):
         return super().save(*args, **kwargs)
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Author.objects.create(pseudonym=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.author.save()
-
-
 class Ip(models.Model):
-    """Айпишники"""
+    """Айпи пользователей"""
     ip = models.CharField(max_length=100)
 
     def __str__(self):
         return self.ip
 
 
-class RaitingScore(models.Model):
+class RatingScore(models.Model):
     """Значения рейтинга"""
     value = models.SmallIntegerField(default=0, verbose_name='значение')
 
@@ -103,11 +84,11 @@ class RaitingScore(models.Model):
         return f"{self.value}"
 
 
-class Raiting(models.Model):
+class Rating(models.Model):
     """Рейтинг"""
     ip = models.CharField(max_length=15, verbose_name='IP адрес')
-    score = models.ForeignKey(RaitingScore, on_delete=models.CASCADE, verbose_name='оценка')
-    new = models.ForeignKey(News, on_delete=models.CASCADE, related_name='raiting_news', verbose_name='статья')
+    score = models.ForeignKey(RatingScore, on_delete=models.CASCADE, verbose_name='оценка')
+    new = models.ForeignKey(News, on_delete=models.CASCADE, related_name='rating_news', verbose_name='статья')
 
     class Meta:
         verbose_name = 'поставленная оценка'

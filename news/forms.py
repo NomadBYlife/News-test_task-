@@ -3,7 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.forms import Textarea
 
-from news.models import RaitingScore, Raiting, News
+from .models import RatingScore, Rating, News
+from .utils import form_attributes, pagination_form_attributes
 
 
 class RegisterUserForm(UserCreationForm):
@@ -19,18 +20,17 @@ class RegisterUserForm(UserCreationForm):
 
 
 class LoginUserForm(AuthenticationForm):
+    """Форма для аутентификации"""
     username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'register_form'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'register_form'}))
 
 
-class RaitingForm(forms.ModelForm):
+class RatingForm(forms.ModelForm):
     """Форма добавления рейтинга"""
-    score = forms.ModelChoiceField(label='Оценка',
-                                   queryset=RaitingScore.objects.all(), empty_label=None,
-                                   )
+    score = forms.ModelChoiceField(label='Оценка', queryset=RatingScore.objects.all(), empty_label=None)
 
     class Meta:
-        model = Raiting
+        model = Rating
         fields = ('score',)
 
 
@@ -52,16 +52,6 @@ class NewsForm(forms.ModelForm):
                 'placeholder': 'Полное содержание статьи'})}
 
 
-form_attributes = [('-raiting', 'рейтингу (от большего к меньшему)'),
-                   ('+raiting', 'рейтингу (от меньшого к большому)'),
-                   ('-date', 'дате (сначала новые)'),
-                   ('+date', 'дате (сначала старые)'), ]
-
-pag_form_attributes = [('2', 2),
-                       ('4', 4),
-                       ('8', 8), ]
-
-
 class SearchForm(forms.Form):
     """Форма для сортировки"""
     new = forms.TypedMultipleChoiceField(label="Сортировать по:", choices=form_attributes,
@@ -70,5 +60,5 @@ class SearchForm(forms.Form):
 
 class PaginatorForm(forms.Form):
     """Форма для кол-ва новостей на странице"""
-    pag = forms.TypedMultipleChoiceField(label="Кол-во новостей на странице:", choices=pag_form_attributes,
+    pag = forms.TypedMultipleChoiceField(label="Кол-во новостей на странице:", choices=pagination_form_attributes,
                                          widget=forms.widgets.RadioSelect)

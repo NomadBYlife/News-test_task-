@@ -1,7 +1,9 @@
+
 from django.urls import path
 
 from .views import NewsListView, RegisterUserView, AllAuthorsView, Login, logout_user, NewsDetailView, AddScoreView, \
     DeleteScoreView, FavoritesAdd, FacoritesDelete, Favorites, NewsAddView
+
 
 urlpatterns = [
     path('', NewsListView.as_view(), name='home'),
@@ -16,4 +18,5 @@ urlpatterns = [
     path('favorites/', Favorites.as_view(), name='favorites'),
     path('favorites_add/<slug:slug>', FavoritesAdd.as_view(), name='favorites_add'),
     path('favorites_delete/<slug:slug>', FacoritesDelete.as_view(), name='favorites_delete'),
+
 ]

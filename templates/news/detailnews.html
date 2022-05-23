@@ -7,7 +7,7 @@
 <body>
 {{ news.title }}<br>
 {{ news.total_views }}
-<form action="{% url 'add_score' %}" method="post" name="raiting">
+<form action="{% url 'add_score' %}" method="post" name="rating">
     {% csrf_token %}
     <input type="hidden" value="{{ news.id }}" name="news">
     {{ score_form.as_p }}
