@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  redis:
+    image: redis
+    restart: always
+
+  web_app:
+    restart: always
+    build: .
+    command: python /app/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+
+  worker:
+    restart: always
+    build: .
+    command: bash -c "celery --workdir=. -A application worker -l info"
+
+  beat:
+    restart: always
+    build: .
+    command: bash -c "celery --workdir=. -A application beat -l info"
