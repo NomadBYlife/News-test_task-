@@ -10,7 +10,7 @@ from django.views.generic import ListView, CreateView
 from .forms import RegisterUserForm, LoginUserForm, RatingForm, NewsForm, SearchForm, PaginatorForm
 from .models import News, Author, Ip, Rating
 from .tasks import send_spam_email
-from .utils import menu, get_client_ip, send
+from .utils import menu, get_client_ip, DataMixin
 
 
 class NewsListView(views.View):
@@ -24,6 +24,7 @@ class NewsListView(views.View):
         form = SearchForm()
         pag_form = PaginatorForm()
         context = {
+            'title': 'Главная страница',
             'news': news,
             'menu': menu,
             'form': form,
@@ -49,6 +50,7 @@ class NewsListView(views.View):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context = {
+            'title': 'Главная страница',
             'page_obj': page_obj,
             'menu': menu,
             'form': form,
@@ -75,9 +77,9 @@ class NewsDetailView(views.View):
         else:
             has_score = 0
         context = {
+            'title': news.title,
             'news': news,
             'menu': menu,
-            'title': news,
             'score_form': RatingForm(),
             'has_score': has_score,
             'my_score': my_score,
@@ -99,12 +101,11 @@ class RegisterUserView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        # send(form.instance.email)
         send_spam_email.delay(form.instance.email)
         return super().form_valid(form)
 
 
-class AllAuthorsView(ListView):
+class AllAuthorsView(DataMixin, ListView):
     """Список авторов"""
     model = Author
     template_name = 'news/authors_all.html'
@@ -112,20 +113,19 @@ class AllAuthorsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Все авторы'
-        context['menu'] = menu
-        return context
+        cont = self.get_user_context(title='Все авторы')
+        return dict(list(context.items()) + list(cont.items()))
 
 
-class Login(LoginView):
+class Login(DataMixin, LoginView):
     """Логин"""
     form_class = LoginUserForm
     template_name = 'news/login.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Все авторы'
-        return context
+        cont = self.get_user_context(title='Вход на сайт')
+        return dict(list(context.items()) + list(cont.items()))
 
     def get_success_url(self):
         return reverse_lazy('home')
@@ -163,7 +163,7 @@ class DeleteScoreView(views.View):
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-class Favorites(ListView):
+class Favorites(DataMixin, ListView):
     """Список избранных"""
     model = News
     template_name = 'news/favorites.html'
@@ -173,7 +173,8 @@ class Favorites(ListView):
         context = super().get_context_data(**kwargs)
         author = Author.objects.get(pseudonym=self.request.user)
         context['news'] = News.objects.filter(favorites=author)
-        return context
+        cont = self.get_user_context(title='Избранные статьи')
+        return dict(list(context.items()) + list(cont.items()))
 
 
 class FavoritesAdd(views.View):
@@ -189,7 +190,7 @@ class FavoritesAdd(views.View):
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-class FacoritesDelete(views.View):
+class FavoritesDelete(views.View):
     """Удаление из избранных"""
 
     @staticmethod
@@ -202,7 +203,7 @@ class FacoritesDelete(views.View):
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-class NewsAddView(CreateView):
+class NewsAddView(DataMixin, CreateView):
     """Создание новой новости"""
     model = News
     template_name = 'news/news_add.html'
@@ -211,3 +212,8 @@ class NewsAddView(CreateView):
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cont = self.get_user_context(title='Добавление новой статьи')
+        return dict(list(context.items()) + list(cont.items()))

@@ -17,36 +17,36 @@ aside a {
 aside ul li:hover,aside ul a:hover{
     color: #eb5959;
 }
-/*.paginate li {*/
-/*    display: inline-block;*/
-/*    text-decoration: none;*/
-/*}*/
-/*.page_select{*/
-/*    text-decoration: none;*/
-/*    margin-left: 10px;*/
-/*    color: black;*/
-/*    padding: 5px 10px;*/
-/*    font-size: 15px;*/
-/*    border: 1px solid black;*/
-/*    border-radius: 50%;*/
-/*}*/
-/*.paginate a {*/
-/*    text-decoration: none;*/
-/*    margin-left: 10px;*/
-/*    color: Blue;*/
-/*    padding: 5px 10px;*/
-/*    font-size: 15px;*/
-/*    border: 1px solid blue;*/
-/*    border-radius: 50%;*/
-/*}*/
-/*.paginate a:hover {*/
-/*    border-color: black;*/
-/*}*/
-/*.middle{*/
-/*    margin-left: 10px;*/
-/*    color: Blue;*/
+.paginate li {
+    display: inline-block;
+    text-decoration: none;
+}
+.page_select{
+    text-decoration: none;
+    margin-left: 10px;
+    color: black;
+    padding: 5px 10px;
+    font-size: 15px;
+    border: 1px solid black;
+    border-radius: 50%;
+}
+.paginate a {
+    text-decoration: none;
+    margin-left: 10px;
+    color: Blue;
+    padding: 5px 10px;
+    font-size: 15px;
+    border: 1px solid blue;
+    border-radius: 50%;
+}
+.paginate a:hover {
+    border-color: black;
+}
+.middle{
+    margin-left: 10px;
+    color: Blue;
 
-/*}*/
+}
 .main li {list-style-type: none;}
 .main li a ,.enter {
     text-decoration: none;

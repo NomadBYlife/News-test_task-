@@ -42,14 +42,12 @@ class NewsForm(forms.ModelForm):
         fields = ['title', 'short_description', 'description']
         widgets = {
             "title": Textarea(attrs={
-                'class': 'form_news',
-                'placeholder': 'Название статьи'}),
+                'class': 'form_news'}),
             'short_description': Textarea(attrs={
-                'class': 'form_news',
-                'placeholder': 'Краткое содержание статьи'}),
+                'class': 'form_news'}),
             'description': Textarea(attrs={
-                'class': 'form_news',
-                'placeholder': 'Полное содержание статьи'})}
+                'class': 'form_news'}),
+        }
 
 
 class SearchForm(forms.Form):

@@ -9,6 +9,14 @@ menu = [{'title': 'Главная', 'url_name': 'home'},
         {'title': 'Все авторы', 'url_name': 'all_author'}]
 
 
+class DataMixin:
+
+    def get_user_context(self, **kwargs):
+        context = kwargs
+        context['menu'] = menu
+        return context
+
+
 def get_client_ip(request):
     """Получаем айпи клиента"""
     ip = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -46,9 +54,10 @@ pagination_form_attributes = [('2', 2),
                               ('4', 4),
                               ('8', 8)]
 
+
 def send(user_email):
     send_mail('Вы подписались на рассылку',
               'Спам будет лететь ;)',
               'vp3231963@gmail.com',
               [user_email],
-              fail_silently=False,)
+              fail_silently=False, )

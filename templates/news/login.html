@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ title }}</title>
-</head>
-<body>
-<h1>{{ title }}</h1>
+{% extends 'news/layout.html' %}
+{% block content %}
+    <h1>{{ title }}</h1>
 
     <form action="" method="post">
-    {% csrf_token %}
-            <div class="form_errors"><ul>{{ form.non_field_errors }}</ul></div>
-    {% for f in form %}
+        {% csrf_token %}
+        <div class="form_errors">
+            <ul>{{ form.non_field_errors }}</ul>
+        </div>
+        {% for f in form %}
             <p><span class="form_label">{{ f.label }}:</span>{{ f }} </p>
-    {% endfor %}
-    <button type="submit">Sign in</button>
+        {% endfor %}
+        <button type="submit">Sign in</button>
     </form>
-</body>
-</html>
+{% endblock content %}

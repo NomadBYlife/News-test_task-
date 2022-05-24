@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-
-{% for author in authors %}
-
-    {{ author }} <br>
-{% endfor %}
-
-</body>
-</html>
+{% extends 'news/layout.html' %}
+{% block content %}
+    {% for author in authors %}
+        {{ author }} <br>
+    {% endfor %}
+{% endblock content %}
