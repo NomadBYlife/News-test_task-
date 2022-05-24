@@ -9,7 +9,8 @@ from django.views.generic import ListView, CreateView
 
 from .forms import RegisterUserForm, LoginUserForm, RatingForm, NewsForm, SearchForm, PaginatorForm
 from .models import News, Author, Ip, Rating
-from .utils import menu, get_client_ip
+from .tasks import send_spam_email
+from .utils import menu, get_client_ip, send
 
 
 class NewsListView(views.View):
@@ -95,6 +96,12 @@ class RegisterUserView(CreateView):
         context['title'] = 'Регистрация нового пользователя'
         context['menu'] = menu
         return context
+
+    def form_valid(self, form):
+        self.object = form.save()
+        # send(form.instance.email)
+        send_spam_email.delay(form.instance.email)
+        return super().form_valid(form)
 
 
 class AllAuthorsView(ListView):
@@ -204,4 +211,3 @@ class NewsAddView(CreateView):
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
         return super().form_valid(form)
-

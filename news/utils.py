@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
@@ -44,3 +45,10 @@ form_attributes = [('-rating', 'рейтингу (от большего к ме�
 pagination_form_attributes = [('2', 2),
                               ('4', 4),
                               ('8', 8)]
+
+def send(user_email):
+    send_mail('Вы подписались на рассылку',
+              'Спам будет лететь ;)',
+              'vp3231963@gmail.com',
+              [user_email],
+              fail_silently=False,)
