@@ -20,10 +20,10 @@ class MyCustomPagination(PageNumberPagination):
 class NewsListApiView(generics.ListAPIView):
     """Список всех новостей"""
     serializer_class = NewsListSerializer
-    queryset = News.objects.all()
+    queryset = News.objects.all().order_by('-date_create')
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filter_fields = ['date_create']
-    ordering_fields = ['date_create', 'views']
+    ordering_fields = ['views']
     pagination_class = MyCustomPagination
 
 

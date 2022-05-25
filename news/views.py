@@ -17,7 +17,7 @@ class NewsListView(views.View):
     """Новости на страницу"""
 
     def get(self, request, *args, **kwargs):
-        news = News.objects.all()
+        news = News.objects.all().order_by('-date_create')
         paginator = Paginator(news, 2)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
