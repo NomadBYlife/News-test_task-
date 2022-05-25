@@ -28,7 +28,6 @@ Docker
 
 `python3 -m venv venv` <br>
 `source venv/bin/activate`<br>
-`cd News`<br>
 `pip install -r requirements.txt`<br>
 `python manage.py migrate`<br>
 <br>
@@ -42,11 +41,11 @@ Confirm password: `admin`<br>
 <br>
 
 Запуск через docker-compose: 
-1. Зайдите в News/application/settings раскомментируйте параметр "REDIS_HOST='redis'"
+1. Зайдите в /application/settings раскомментируйте параметр "REDIS_HOST='redis'"
 2. Введите команду в терминале `docker-compose up --build`
 
 Запуск через терминал: <br>
-1. Зайдите в News/application/settings раскомментируйте параметр "REDIS_HOST='0.0.0.0'"
+1. Зайдите в /application/settings раскомментируйте параметр "REDIS_HOST='0.0.0.0'"
 2. `python manage.py runserver`<br>
 
 
