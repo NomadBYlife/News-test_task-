@@ -59,6 +59,19 @@ class NewsListView(views.View):
         return render(request, 'news/main.html', context)
 
 
+class MyNews(DataMixin, ListView):
+    """Получение только моих авторских статей"""
+    model = News
+    template_name = 'news/my_news_list.html'
+    context_object_name = 'news'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news'] = News.objects.filter(author__pseudonym=self.request.user)
+        cont = self.get_user_context(title='Мои новости')
+        return dict(list(context.items()) + list(cont.items()))
+
+
 class NewsDetailView(views.View):
     """Детальное описание новости"""
 

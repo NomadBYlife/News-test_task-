@@ -4,6 +4,7 @@
         <a href="{% url 'news_detail' i.slug %}">{{ i.title }} <br></a>
         {{ i.short_description }}<br>
         {{ i.description }}<br>
+        {{ i.date_create }}
         просмотры: {{ i.total_views }}<br>
         рейтинг {{ i.rating_sum }}<br><br>
         <hr>

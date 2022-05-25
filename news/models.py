@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -15,7 +17,7 @@ class News(models.Model):
     description = models.TextField(verbose_name='содержание')
     favorite = models.BooleanField(default=False, verbose_name='в избранном')
     views = models.ManyToManyField('Ip', related_name='post_view', blank=True, verbose_name='просмотры')
-    date_create = models.DateTimeField(auto_now=True, verbose_name='дата публикации')
+    date_create = models.DateField(auto_now_add=True, verbose_name='дата публикации')
 
     class Meta:
         verbose_name = 'новость'

@@ -15,7 +15,7 @@
         {% endfor %}
         {% if request.user.is_authenticated %}
             <li><a href="{% url 'news_add' %}">Новая статья</a></li>
-            <li><a class="disable" href="#">{{ user.username }}</a></li>
+            <li><a href="{% url 'my_news' %}">Мои новости ({{ user.username }})</a></li>
             <li><a href="{% url 'favorites' %}">Избранное</a></li>
             <li><a href="{% url 'logout' %}">Выйти</a></li>
         {% else %}

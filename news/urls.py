@@ -2,11 +2,12 @@
 from django.urls import path
 
 from .views import NewsListView, RegisterUserView, AllAuthorsView, Login, logout_user, NewsDetailView, AddScoreView, \
-    DeleteScoreView, FavoritesAdd, FavoritesDelete, Favorites, NewsAddView
+    DeleteScoreView, FavoritesAdd, FavoritesDelete, Favorites, NewsAddView, MyNews
 
 
 urlpatterns = [
     path('', NewsListView.as_view(), name='home'),
+    path('news/my_news/', MyNews.as_view(), name='my_news'),
     path('news/news_add', NewsAddView.as_view(), name='news_add'),
     path('news/<slug:slug>', NewsDetailView.as_view(), name='news_detail'),
     path('add-score/', AddScoreView.as_view(), name='add_score'),
