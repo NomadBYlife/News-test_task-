@@ -1,0 +1,41 @@
+Target:
+Read news feed, track favorite news. Be able to evaluate the rating of the news and the number of views on it, as well
+as the ability to write your own article
+
+USER STORY:
+- I, as a user, want to register in the service, specify a username, password and email.
+- I, as a user, want to see a list of current news in my feed, which has a title, short description,
+    number of views, and article rating.
+- I, as a user, want to switch pages between news.
+- I, as a user, want to sort news by rating and publication date.
+- I, as a user, want to read a specific article by seeing the title, preview, content of the article,
+    number of views and rating of the article
+- I, as a user, want to increase or decrease the rating of the entry, remove my rating.
+- I, as a user, want to view the articles I like.
+- I, as a user, want to find an article in the address bar by writing its title (slug).
+- I, as an authorized user, want to write my article, indicating in it the title, preview,
+    short description and content.
+- I, as an authorized user, want to add articles to favorites, view articles in favorites, delete them.
+
+BUSINESS REQUIREMENTS:
+- The view count should increase for each successful submission of an article by a unique user.
+- Implement mailing of letters with any periodicity to all registered users.
+
+TECHNICAL PRESENTATION:
+Django app providing a RESTful API for JWT authentication, getting all articles by a normal user and editing their
+articles by a authorized user (CRUD), page-by-page pagination
+
+The system must be implemented as a Docker stack, described in dockercompose.yaml
+
+Development should be done using the Git version control system.
+
+Tests
+
+TECHNOLOGY STACK:
+Django
+DjangoRestFramework
+Celery
+Docker
+Docker-compose
+Git
+Unitest/PyTest

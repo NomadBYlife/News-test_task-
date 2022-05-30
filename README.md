@@ -1,7 +1,8 @@
 # Test task
 
 ## About
-In this project, tasks were implemented according to the technical specifications
+In this project, tasks were implemented according to the technical task(file with description is inside)
+
 
 
 ### Stack used
