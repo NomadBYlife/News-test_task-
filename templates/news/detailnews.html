@@ -2,22 +2,22 @@
 {% block content %}
     <h2>{{ news.title }}</h2><br>
     <p>{{ news.description }}</p>
-    просмотров: {{ news.total_views }}
-    рейтинг: {{ news.rating_sum }}
+    Views: {{ news.total_views }}
+    Rating: {{ news.rating_sum }}
     <form action="{% url 'add_score' %}" method="post" name="rating">
         {% csrf_token %}
         <input type="hidden" value="{{ news.id }}" name="news">
         {{ score_form.as_p }}
-        <button type="submit">поставить оценку</button>
+        <button type="submit">rate</button>
         {% if has_score == 1 %}
-            моя оценка: {{ my_score.score }}
-            <a href="{% url 'delete_score' news.slug %}">удалить оценку</a>
+            My score: {{ my_score.score }}
+            <a href="{% url 'delete_score' news.slug %}">delete score</a>
         {% endif %}
     </form>
     {% if news not in request.user.author.favorites.all %}
-        <a href="{% url 'favorites_add' news.slug %}">добавить в избранное</a>
+        <a href="{% url 'favorites_add' news.slug %}">add to favorite</a>
     {% else %}
-        <p>Добавлен в избранное</p>
-        <a href="{% url 'favorites_delete' news.slug %}">Удалить из избранного</a>
+        <p>in favorite</p>
+        <a href="{% url 'favorites_delete' news.slug %}">delete from favorite</a>
     {% endif %}
 {% endblock content %}

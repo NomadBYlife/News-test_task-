@@ -17,8 +17,8 @@ def send_spam_email(user_email):
 def send_beat_email():
     for user in User.objects.filter(is_staff=False):
         send_mail(
-            'Вы подписаны на рассылку',
-            'мы будем присылать вам письма каждые сколько минут для теста',
+            'You are subscribed to the newsletter',
+            'we will send you emails every few minutes for a test',
             'vp3231963@gmail.com',
             [user.email],
             fail_silently=False,

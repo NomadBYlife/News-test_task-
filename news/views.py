@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django import views
 from django.views.generic import ListView, CreateView
 
-from .forms import RegisterUserForm, LoginUserForm, RatingForm, NewsForm, SearchForm, PaginatorForm
+from .forms import RegisterUserForm, LoginUserForm, RatingForm, NewsForm, SortForm
 from .models import News, Author, Ip, Rating
 from .tasks import send_spam_email
 from .utils import menu, get_client_ip, DataMixin
@@ -21,20 +21,18 @@ class NewsListView(views.View):
         paginator = Paginator(news, 2)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        form = SearchForm()
-        pag_form = PaginatorForm()
+        form = SortForm()
         context = {
             'title': 'Главная страница',
             'news': news,
             'menu': menu,
             'form': form,
             'page_obj': page_obj,
-            'pag_form': pag_form,
         }
         return render(request, 'news/main.html', context)
 
     def post(self, request, *args, **kwargs):
-        form = SearchForm()
+        form = SortForm()
         page_size = 2
         news = News.objects.all()
         if request.POST['new'] == '-rating':
@@ -45,7 +43,6 @@ class NewsListView(views.View):
             news = News.objects.all().order_by('-date_create')
         if request.POST['new'] == '+date':
             news = News.objects.all().order_by('date_create')
-        pag_form = PaginatorForm()
         paginator = Paginator(news, page_size)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -54,7 +51,6 @@ class NewsListView(views.View):
             'page_obj': page_obj,
             'menu': menu,
             'form': form,
-            'pag_form': pag_form,
         }
         return render(request, 'news/main.html', context)
 

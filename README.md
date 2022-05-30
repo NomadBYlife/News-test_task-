@@ -1,10 +1,10 @@
-# Тестовое задание
+# Test task
 
-## О проекте
-В этом проекте были реализованы задания по ТЗ
+## About
+In this project, tasks were implemented according to the technical specifications
 
 
-### Используемый стек
+### Stack used
 
 Python<br>
 Django<br>
@@ -13,52 +13,53 @@ JWT authenticated<br>
 Celery<br>
 Docker
 
-## Быстрый старт
+## Quick Start
 
-Краткое руководство для MacOs/Linux:
+Quick guide for MacOs/Linux:
+<br>
 
-Откройте терминал и перейдите в директорию где будет лежать ваш проект. <br>
-Если вы используете SSH введите команду : `git@github.com:NomadBYlife/News-test_task-.git`
+If you are using SSH: `git clone git@github.com:NomadBYlife/News-test_task-.git`
 
-Если вы используете https: `https://github.com/NomadBYlife/News-test_task-.git`
+If https: `git clone https://github.com/NomadBYlife/News-test_task-.git`
 
 
-Далее команды:
+Enter next command:
 
 
 `python3 -m venv venv` <br>
 `source venv/bin/activate`<br>
 `pip install -r requirements.txt`<br>
+`python manage.py makemigrations`<br>
 `python manage.py migrate`<br>
 <br>
-Создайте суперпользователя (администратора):<br>
+Create superuser(admin):<br>
 `python manage.py createsuperuser`<br>
 <br>
 Username: `admin`<br>
-Email: по желанию, не обязательно <br>
+Email: if you want, not necessary<br>
 Password: `admin`<br>
 Confirm password: `admin`<br>
 <br>
+Go to the admin part and fill in the "Rating Score". For example 1,2,3<br>
+Starting with docker-compose: 
+1. Go to /application/settings uncomment the parameter "REDIS_HOST='redis'"
+2. Enter command in terminal `docker-compose up --build`
 
-Запуск через docker-compose: 
-1. Зайдите в /application/settings раскомментируйте параметр "REDIS_HOST='redis'"
-2. Введите команду в терминале `docker-compose up --build`
-
-Запуск через терминал: <br>
-1. Зайдите в /application/settings раскомментируйте параметр "REDIS_HOST='0.0.0.0'"
-2. `python manage.py runserver`<br>
+Staring with terminal: <br>
+1. Go to /application/settings uncomment the parameter "REDIS_HOST='0.0.0.0'"
+2. Enter command in terminal `python manage.py runserver`<br>
 
 
 
 API endpoints: <br>
-http://127.0.0.1:8000/api/v1/news/  - получение всех статей <br>
-http://127.0.0.1:8000/api/v1/news/vendorecode(id)   -  получение конкретной статьи(принимает ВендорКод, он же Id, как параметр) <br>
-JWT аутентификация <br>
+http://127.0.0.1:8000/api/v1/news/  - all articles <br>
+http://127.0.0.1:8000/api/v1/news/vendorecode(id)   -  getting a specific article (takes VendorCode(Id) as a parameter) <br>
+JWT authentication <br>
 http://127.0.0.1:8000/api/v1/token/      <br>
 http://127.0.0.1:8000/api/v1/token/refresh/     <br>
 http://127.0.0.1:8000/api/v1/token/verify/      <br>
-Только для аутентифицированных пользователей
-http://127.0.0.1:8000/api/v1/news/my_news/   -   получение всех пользовательских авторских статей <br>
-http://127.0.0.1:8000/api/v1/news/my_news/vendorecode(id)   -  изменение/удаление конкретной пользовательской статьи <br>
-http://127.0.0.1:8000/api/v1/news/my_news/favorites/   -   список избранных статей пользователя<br>
-http://127.0.0.1:8000/api/v1/news/my_news/create/   -   создание новой статьи<br>
+Only for authenticated users
+http://127.0.0.1:8000/api/v1/news/my_news/   -   getting all user articles <br>
+http://127.0.0.1:8000/api/v1/news/my_news/vendorecode(id)   -  update/delete a specific user article <br>
+http://127.0.0.1:8000/api/v1/news/my_news/favorites/   -   list of user's favorite articles<br>
+http://127.0.0.1:8000/api/v1/news/my_news/create/   -   create a new article<br>

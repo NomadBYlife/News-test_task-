@@ -14,13 +14,13 @@
             <li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
         {% endfor %}
         {% if request.user.is_authenticated %}
-            <li><a href="{% url 'news_add' %}">Новая статья</a></li>
-            <li><a href="{% url 'my_news' %}">Мои новости ({{ user.username }})</a></li>
-            <li><a href="{% url 'favorites' %}">Избранное</a></li>
-            <li><a href="{% url 'logout' %}">Выйти</a></li>
+            <li><a href="{% url 'news_add' %}">New article</a></li>
+            <li><a href="{% url 'my_news' %}">My articles ({{ user.username }})</a></li>
+            <li><a href="{% url 'favorites' %}">Favorite</a></li>
+            <li><a href="{% url 'logout' %}">Log out</a></li>
         {% else %}
-            <li><a href="{% url 'register' %}">Регистрация</a></li>
-            <li><a href="{% url 'login' %}">Войти</a></li>
+            <li><a href="{% url 'register' %}">Registration</a></li>
+            <li><a href="{% url 'login' %}">Log in</a></li>
         {% endif %}
     </ul>
 </aside>

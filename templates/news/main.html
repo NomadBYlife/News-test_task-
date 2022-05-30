@@ -5,8 +5,8 @@
         {{ i.short_description }}<br>
         {{ i.description }}<br>
         {{ i.date_create | date:"d/m/Y H:i:s" }}
-        просмотры: {{ i.total_views }}<br>
-        рейтинг {{ i.rating_sum }}<br><br>
+        Views: {{ i.total_views }}<br>
+        Rating {{ i.rating_sum }}<br><br>
         <hr>
     {% endfor %}
     <div class="paginate">
@@ -30,7 +30,7 @@
                 <li><a href="?page={{ page_obj.next_page_number }}">&gt</a></li>
             {% endif %}
             {% if page_obj.has_other_pages %}
-                <li class="middle">из</li>
+                <li class="middle">from</li>
                 <li><a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
             {% endif %}
         </ul>
@@ -38,6 +38,6 @@
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Отсортировать</button>
+        <button type="submit">Sort</button>
     </form>
 {% endblock content %}

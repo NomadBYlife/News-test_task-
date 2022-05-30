@@ -18,7 +18,7 @@ class DataMixin:
 
 
 def get_client_ip(request):
-    """Получаем айпи клиента"""
+    """Getting client IP"""
     ip = request.META.get('HTTP_X_FORWARDED_FOR')
     if ip:
         ip = ip.split(',')[0]
@@ -45,10 +45,10 @@ def save_user_profile(sender, instance, **kwargs):
     instance.author.save()
 
 
-form_attributes = [('-rating', 'рейтингу (от большего к меньшему)'),
-                   ('+rating', 'рейтингу (от меньшого к большому)'),
-                   ('-date', 'дате (сначала новые)'),
-                   ('+date', 'дате (сначала старые)'), ]
+form_attributes = [('-rating', 'rating (from largest to smallest)'),
+                   ('+rating', 'rating (from smallest to largest)'),
+                   ('-date', 'date (first new)'),
+                   ('+date', 'дате (first old)'), ]
 
 pagination_form_attributes = [('2', 2),
                               ('4', 4),
@@ -56,8 +56,8 @@ pagination_form_attributes = [('2', 2),
 
 
 def send(user_email):
-    send_mail('Вы подписались на рассылку',
-              'Спам будет лететь ;)',
+    send_mail('You are subscribed to the newsletter',
+              'Spam will fly ;)',
               'vp3231963@gmail.com',
               [user_email],
               fail_silently=False, )

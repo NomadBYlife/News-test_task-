@@ -6,19 +6,19 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import News, Author
-from .serializers import NewsListSerializer, NewsDetailSerializer, NewsForUpdateSerializer, NewsCreateSerializer
+from .serializers import NewsListSerializer, NewsDetailSerializer, NewsForUpdateCreateSerializer
 
 
 
 class MyCustomPagination(PageNumberPagination):
-    """Кастомная пагинация"""
+    """Custom pagination"""
     page_size = 3
     page_size_query_param = 'page_size'
     max_page_size = 100
 
 
 class NewsListApiView(generics.ListAPIView):
-    """Список всех новостей"""
+    """List all articles"""
     serializer_class = NewsListSerializer
     queryset = News.objects.all().order_by('-date_create')
     filter_backends = (DjangoFilterBackend, OrderingFilter)
@@ -28,13 +28,13 @@ class NewsListApiView(generics.ListAPIView):
 
 
 class NewsDetailApiView(generics.RetrieveAPIView):
-    """Детализация определенной новости"""
+    """detail article"""
     serializer_class = NewsDetailSerializer
     queryset = News.objects.all()
 
 
 class MyNewsApiView(generics.ListAPIView):
-    """Список новостей моих как автора"""
+    """List of my articles"""
     queryset = News.objects.all()
     serializer_class = NewsListSerializer
     permission_classes = [IsAuthenticated]
@@ -46,15 +46,16 @@ class MyNewsApiView(generics.ListAPIView):
 
 
 class MyNewsUpdateApiView(generics.RetrieveUpdateDestroyAPIView):
-    """Изменение одной из моих новостей"""
+    """Update one of my article"""
     queryset = News.objects.all()
-    serializer_class = NewsForUpdateSerializer
+    serializer_class = NewsForUpdateCreateSerializer
     permission_classes = [IsAuthenticated]
 
 
 class MyNewsCreateApiView(generics.CreateAPIView):
-    """Создание новой статьи"""
-    serializer_class = NewsCreateSerializer
+    """Create new article"""
+    serializer_class = NewsForUpdateCreateSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -67,7 +68,7 @@ class MyNewsCreateApiView(generics.CreateAPIView):
 
 
 class MyNewsFavoriteApiView(generics.ListAPIView):
-    """Список избранных новостей"""
+    """List of favorite articles"""
     queryset = News.objects.all()
     serializer_class = NewsListSerializer
     permission_classes = [IsAuthenticated]

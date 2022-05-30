@@ -4,7 +4,7 @@ from .models import News, Author
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    """Вывоод автора"""
+    """Serializer for Author"""
     pseudonym = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
@@ -13,7 +13,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class NewsListSerializer(serializers.ModelSerializer):
-    """Вывод всех новостей"""
+    """Serializer for all articles"""
     total_views = serializers.IntegerField()
     rating_sum = serializers.IntegerField()
     author = AuthorSerializer(read_only=True)
@@ -24,8 +24,8 @@ class NewsListSerializer(serializers.ModelSerializer):
                   'rating_sum', 'date_create']
 
 
-class NewsForUpdateSerializer(serializers.ModelSerializer):
-    """Обновления новости"""
+class NewsForUpdateCreateSerializer(serializers.ModelSerializer):
+    """Serializer for update article"""
 
     class Meta:
         model = News
@@ -33,7 +33,7 @@ class NewsForUpdateSerializer(serializers.ModelSerializer):
 
 
 class NewsDetailSerializer(serializers.ModelSerializer):
-    """Детализация новости"""
+    """Serializer for detail article"""
     rating_sum = serializers.IntegerField()
     author = AuthorSerializer(read_only=True)
     total_views = serializers.IntegerField()
@@ -41,11 +41,3 @@ class NewsDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         exclude = ['views']
-
-
-class NewsCreateSerializer(serializers.ModelSerializer):
-    """Создание новости"""
-
-    class Meta:
-        model = News
-        fields = ['title', 'short_description', 'description']
